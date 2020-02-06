@@ -104,7 +104,7 @@ function! s:get_executable()
 endfunction
 
 function! translate_it#close() abort
-  if !exists('g:translate_it_winid') || win_getid() == g:translate_it_winid
+  if !translate_it#is_closable()
     return
   endif
   sil! call nvim_win_close(g:translate_it_winid, v:true)
@@ -197,9 +197,26 @@ function! translate_it#cword() abort
   call s:trans(expand('<cword>'))
 endfunction
 
+function! translate_it#cword_or_close() abort
+  if translate_it#is_closable()
+    call translate_it#close()
+  else
+    call s:trans(expand('<cword>'))
+  endif
+endfunction
+
 function! translate_it#visual() abort
   let str = translate_it#get_visual_text()
   call s:trans(s:joinlines(str))
+endfunction
+
+function! translate_it#visual_or_close() abort
+  if translate_it#is_closable()
+    call translate_it#close()
+  else
+    let str = translate_it#get_visual_text()
+    call s:trans(s:joinlines(str))
+  endif
 endfunction
 
 function! translate_it#get_visual_text() abort
@@ -215,6 +232,10 @@ function! s:joinlines(str) abort
   let str = a:str
   let str = substitute(str, '\_s\+', ' ', 'g')
   return str
+endfunction
+
+function! translate_it#is_closable() abort
+  return exists('g:translate_it_winid') && win_getid() != g:translate_it_winid
 endfunction
 
 " assumes that the last line is blank
