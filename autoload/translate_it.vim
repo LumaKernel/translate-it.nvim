@@ -2,7 +2,6 @@
 let s:Promise = vital#translate_it#import('Async.Promise')
 let s:J = vital#translate_it#import('JobShims.Vim')
 let s:ANSI = vital#translate_it#import('Vim.Buffer.ANSI')
-let g:J = s:J
 
 function! s:wait(ms)
   return s:Promise.new({resolve -> timer_start(a:ms, {->resolve()})})
