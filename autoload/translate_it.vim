@@ -140,6 +140,7 @@ function! s:update(...) abort
   endif
 
   setlocal wrap
+  setlocal buftype=nofile
   let opts.height = max([s:count_apparent_lines(), 1])
   let g:translate_it_winheight = opts.height
 
